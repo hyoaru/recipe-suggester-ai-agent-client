@@ -47,7 +47,7 @@ pipeline {
           }
 
           steps {
-            dir('api-tests') {
+            dir('client-tests') {
               echo 'Checking out client tests source code...'
               git branch: 'master', url: env.CLIENT_TESTS_REPOSITORY_URL
               echo 'Checked out source code.'
@@ -109,7 +109,7 @@ pipeline {
         sh "docker network create ${env.DOCKER_NETWORK_NAME}"
         echo 'Docker network created.'
 
-        script { runApiContainer('test') }
+        script { runClientContainer('test') }
         sh 'docker ps -a'
       }
     }
@@ -248,9 +248,9 @@ pipeline {
 
       steps {
         script {
-          // Stop the production api container to then run the rebuilt image
-          stopApiContainer('production')
-          runApiContainer('production')
+          // Stop the production client container to then run the rebuilt image
+          stopClientContainer('production')
+          runClientContainer('production')
         }
       }
     }
@@ -272,7 +272,7 @@ pipeline {
           echo "Build cause: ${cause.shortDescription}"
         }
 
-        stopApiContainer('test')
+        stopClientContainer('test')
         cleanDanglingImages()
         sh "docker network rm ${DOCKER_NETWORK_NAME}"
 
@@ -300,11 +300,8 @@ void cleanDanglingImages() {
 }
 
 void runRobotTests(String testType) {
-  dir('./api-tests') {
-    docker.image(env.DOCKER_IMAGE_NAME_API_TESTS).inside("--network=${env.DOCKER_NETWORK_NAME}") {
-      echo 'Running health check...'
-      sh "curl ${env.DOCKER_CONTAINER_NAME_API}:7000/api/operations/health"
-
+  dir('./client-tests') {
+    docker.image(env.DOCKER_IMAGE_NAME_CLIENT_TESTS).inside("--network=${env.DOCKER_NETWORK_NAME}") {
       if (testType != 'all') {
         sh "robot --include ${testType} --outputdir ./results ./tests/suites"
       } else {
