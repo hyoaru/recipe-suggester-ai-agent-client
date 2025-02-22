@@ -1,7 +1,13 @@
-FROM node:20-alpine
-RUN apk add --no-cache curl bash
+FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD ["npm", "run", "build"]
+RUN npm run build
+
+FROM nginx:1.27.3-alpine AS runtime
+WORKDIR /var/www/public
+COPY /nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist .  
+EXPOSE 8000
+CMD ["nginx", "-g", "daemon off;"]
