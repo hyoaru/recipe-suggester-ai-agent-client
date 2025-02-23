@@ -343,7 +343,6 @@ void runClientContainer(String environment) {
       sh """
         docker run -d --rm \
           --name ${env.DOCKER_CONTAINER_NAME_CLIENT_PRODUCTION} \
-          -p 8001:8000 \
           -v \$(pwd):/app \
           ${env.DOCKER_IMAGE_NAME_CLIENT_PRODUCTION} 
       """
