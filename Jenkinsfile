@@ -344,6 +344,7 @@ void runClientContainer(String environment) {
         docker run -d --rm \
           --name ${env.DOCKER_CONTAINER_NAME_CLIENT_PRODUCTION} \
           -v \$(pwd):/app \
+          -p 8001:8000 \
           ${env.DOCKER_IMAGE_NAME_CLIENT_PRODUCTION} 
       """
     } else if (environment == 'test') {
