@@ -5,7 +5,7 @@ pipeline {
     sanitized_branch_name = env.BRANCH_NAME.replaceAll('/', '-')
 
     DOCKER_NETWORK_NAME = "recipe_suggester_ai_agent_network_${env.sanitized_branch_name}_${env.BUILD_ID}"
-    DOCKER_IMAGE_NAME_API_ROBOT_TEST = 'recipe_suggester_ai_agent_api_robot_test'
+    DOCKER_IMAGE_NAME_CLIENT_ROBOT_TEST = 'recipe_suggester_ai_agent_client_robot_test'
 
     DOCKER_IMAGE_NAME_CLIENT_TEST = 'recipe_suggester_ai_agent_client_test'
     DOCKER_IMAGE_NAME_CLIENT_STAGING = "recipe_suggester_ai_agent_client_staging_build_${env.BUILD_ID}"
