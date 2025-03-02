@@ -263,11 +263,22 @@ pipeline {
       when { branch 'staging' }
       stages {
         stage ('Build Docker Image For Staging') {
+          environment {
+            API_BASE_URL = 'https://recipe-ai-api-staging.anonalyze.org'
+          }
+
           steps {
             echo 'Building client docker image for staging...'
             sh 'echo "Using docker version: $(docker --version)"'
 
             script {
+              dir('client') {
+                script {
+                  writeEnvFile("./client", [
+                    "VITE_CORE_API_URL=${env.API_BASE_URL}"
+                  ])
+                }
+              }
               buildDockerImage('./client', env.DOCKER_IMAGE_NAME_CLIENT_STAGING)
             }
 
