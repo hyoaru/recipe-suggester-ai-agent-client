@@ -369,7 +369,7 @@ void cleanDanglingImages() {
 
 void runRobotTests(String testType) {
   dir('./client-tests') {
-    docker.image(env.DOCKER_IMAGE_NAME_CLIENT_ROBOT_TEST).inside("--network=${env.DOCKER_NETWORK_NAME}") {
+    docker.image(env.DOCKER_IMAGE_NAME_CLIENT_ROBOT_TEST).inside("--network=${env.DOCKER_NETWORK_NAME} --user=root") {
       if (testType != 'all') {
         sh "robot --include ${testType} --outputdir ./results ./tests/suites"
       } else {
