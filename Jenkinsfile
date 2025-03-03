@@ -272,13 +272,9 @@ pipeline {
             sh 'echo "Using docker version: $(docker --version)"'
 
             script {
-              dir('client') {
-                script {
-                  writeEnvFile("./client", [
-                    "VITE_CORE_API_URL=${env.API_BASE_URL}"
-                  ])
-                }
-              }
+              writeEnvFile("./client", [
+                "VITE_CORE_API_URL=${env.API_BASE_URL}"
+              ])
               buildDockerImage('./client', env.DOCKER_IMAGE_NAME_CLIENT_STAGING)
             }
 
